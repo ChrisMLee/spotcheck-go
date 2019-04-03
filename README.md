@@ -24,6 +24,8 @@ docker-compose up
 
 #### Go + Postgres
 * https://medium.com/@vptech/complexity-is-the-bane-of-every-software-engineer-e2878d0ad45a
+* https://flaviocopes.com/golang-sql-database/
+* https://medium.com/@beld_pro/postgres-with-golang-3b788d86f2ef
 
 #### Go + GraphQL
 * https://medium.com/@bradford_hamilton/building-an-api-with-graphql-and-go-9350df5c9356
@@ -34,6 +36,14 @@ https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elastics
 #### DB
 * https://medium.com/@kimtnguyen/relational-database-schema-design-overview-70e447ff66f9
 
+#### SQL
+* https://stackoverflow.com/questions/4111594/why-always-close-database-connection
+> 1. Open connections as late as possible
+> 2. Close connections as soon as possible
+> The connection itself is returned to the connection pool. Connections are a limited and relatively expensive resource. Any new connection you establish that has exactly the same connection string will be able to reuse the connection from the pool.
+
+#### Docker
+* [How do I pass environment variables to Docker containers?](https://stackoverflow.com/questions/30494050/how-do-i-pass-environment-variables-to-docker-containers)
 
 #### Google Maps
 Using MySQL and PHP with Google Maps:  
