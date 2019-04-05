@@ -17,6 +17,10 @@ spots
 ```
 docker-compose up
 ```
+### Go
+> Slices can be created with the built-in make function; this is how you create dynamically-sized arrays.
+> The make function allocates a zeroed array and returns a slice that refers to that array
+https://tour.golang.org/moretypes/13
 
 ### Resources
 #### Go
@@ -33,6 +37,8 @@ docker-compose up
 #### Go + docker + postgres + elastic
 https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elasticsearch-in-docker-61bc8a0d5e66
 
+* [Go tutorial: REST API backed by PostgreSQL](https://flaviocopes.com/golang-tutorial-rest-api/)
+
 #### DB
 * https://medium.com/@kimtnguyen/relational-database-schema-design-overview-70e447ff66f9
 
@@ -44,6 +50,8 @@ https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elastics
 
 #### Docker
 * [How do I pass environment variables to Docker containers?](https://stackoverflow.com/questions/30494050/how-do-i-pass-environment-variables-to-docker-containers)
+* [Environment variables in Compose](https://docs.docker.com/compose/environment-variables/)
+
 
 #### Google Maps
 Using MySQL and PHP with Google Maps:  

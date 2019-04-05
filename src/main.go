@@ -7,6 +7,15 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+	"os"
+)
+
+const (
+	dbhost = "DB_HOST"
+	dbport = "DB_PORT"
+	dbuser = "DB_USER"
+	dbpass = "DB_PASSWORD"
+	dbname = "DB_NAME"
 )
 
 var db *sql.DB
@@ -21,6 +30,7 @@ var db *sql.DB
 var db = make(map[string]string)
 
 func main() {
+	initDb()
 	r := gin.Default()
 	db, err := sql.Open("postgres", "user=spotcheck-db-dev dbname=spotcheck_dev sslmode=verify-full")
 	if err != nil {
@@ -32,6 +42,7 @@ func main() {
 		})
 	})
 	r.GET("/user/:id", func(c *gin.Context) {
+		fmt.Println("tried to print")
 		id := c.Param("id")
 		value, ok := db[id]
 		if ok {
@@ -54,4 +65,41 @@ func main() {
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080
+}
+
+func initDb() {
+	fmt.Println("Trying to init the db")
+	config := dbConfig()
+}
+
+func dbConfig() map[string]string {
+	fmt.Println("running the dbConfig")
+	conf := make(map[string]string)
+	host, ok := os.LookupEnv(dbhost)
+	if !ok {
+		panic("DBHOST environment variable required but not set")
+	}
+	// port, ok := os.LookupEnv(dbport)
+	// if !ok {
+	// 	panic("DBPORT environment variable required but not set")
+	// }
+	// user, ok := os.LookupEnv(dbuser)
+	// if !ok {
+	// 	panic("DBUSER environment variable required but not set")
+	// }
+	// password, ok := os.LookupEnv(dbpass)
+	// if !ok {
+	// 	panic("DBPASS environment variable required but not set")
+	// }
+	// name, ok := os.LookupEnv(dbname)
+	// if !ok {
+	// 	panic("DBNAME environment variable required but not set")
+	// }
+	// conf[dbhost] = host
+	// conf[dbport] = port
+	// conf[dbuser] = user
+	// conf[dbpass] = password
+	// conf[dbname] = name
+	conf[dbhost] = host
+	return conf
 }
