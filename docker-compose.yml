@@ -17,3 +17,5 @@ services:
       - db
     links:
       - db
+    environment:
+      GO_WORK_DIR: "${GO_PROJECT_DIR}/app"

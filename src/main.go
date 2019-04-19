@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
-	"log"
 	"net/http"
 	"os"
 )
@@ -27,16 +26,17 @@ var db *sql.DB
 // https://godoc.org/github.com/gin-gonic/gin
 
 // func make(t Type, size ...IntegerType) Type
-var db = make(map[string]string)
+var fakeDb = make(map[string]string)
 
 func main() {
 	initDb()
 	r := gin.Default()
-	db, err := sql.Open("postgres", "user=spotcheck-db-dev dbname=spotcheck_dev sslmode=verify-full")
-	if err != nil {
-		panic(err)
-	}
+	// db, err := sql.Open("postgres", "user=spotcheck-db-dev dbname=spotcheck_dev sslmode=verify-full")
+	// if err != nil {
+	// 	panic(err)
+	// }
 	r.GET("/ping", func(c *gin.Context) {
+		fmt.Println("da ping")
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
@@ -44,7 +44,7 @@ func main() {
 	r.GET("/user/:id", func(c *gin.Context) {
 		fmt.Println("tried to print")
 		id := c.Param("id")
-		value, ok := db[id]
+		value, ok := fakeDb[id]
 		if ok {
 			c.JSON(http.StatusOK, gin.H{"user": id, "value": value})
 		} else {
@@ -59,7 +59,7 @@ func main() {
 			Value string `json: "value" binding:"required"`
 		}
 		if c.Bind(&json) == nil {
-			db[id] = json.Value
+			fakeDb[id] = json.Value
 			c.JSON(http.StatusOK, gin.H{"status": "ok"})
 		}
 	})
@@ -69,7 +69,7 @@ func main() {
 
 func initDb() {
 	fmt.Println("Trying to init the db")
-	config := dbConfig()
+	// config := dbConfig()
 }
 
 func dbConfig() map[string]string {
