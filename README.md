@@ -11,6 +11,64 @@ spotchecker
 users
 spots
 
+user:
+- id
+- email
+- username
+- created
+- updated
+
+#### "Seed"
+```
+CREATE TABLE users(
+  id SERIAL NOT NULL PRIMARY KEY,
+  email text not null unique,
+  username text
+);
+
+CREATE TABLE spots(
+  id SERIAL NOT NULL PRIMARY KEY,
+  name text,
+  image_url text,
+  description text,
+  address text,
+  lat float,
+  lng float,
+  user_id INTEGER REFERENCES users(id)
+);
+
+INSERT INTO users (email, username) VALUES ('scruffmcgruff@gmail.com', 'smooth_operator');
+INSERT INTO users (email, username) VALUES ('cheezgawd@gmail.com', 'icecube');
+
+SELECT * from users;
+
+INSERT INTO spots (name, image_url, description, address, lat, lng, user_id) VALUES (
+  'terrible down ledge',
+  NULL,
+  'a very bad down ledge into a door',
+  NULL,
+  40.702590, 
+  -73.992887,
+  1
+), (
+  'ledge on pier',
+  NULL,
+  'an okay ledge next to some basketball courts',
+  NULL,
+  40.699387, 
+  -73.998415,
+  1
+), (
+  'step ledge',
+  NULL,
+  'a two stair manny pad and jank ledge',
+  NULL,
+  40.680627, 
+  -73.991448,
+  1
+);
+```
+
 ### Docker
 > Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration. 
 
@@ -21,6 +79,9 @@ docker-compose up
 > Slices can be created with the built-in make function; this is how you create dynamically-sized arrays.
 > The make function allocates a zeroed array and returns a slice that refers to that array
 https://tour.golang.org/moretypes/13
+
+- Golang - Asterisk and Ampersand Cheatsheet
+https://gist.github.com/josephspurrier/7686b139f29601c3b370
 
 ### Resources
 #### Go

@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -17,6 +18,12 @@ const (
 	dbname = "DB_NAME"
 )
 
+type userData struct {
+	Id       int    `json:"id"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
+}
+
 var db *sql.DB
 
 // https://github.com/gin-gonic/examples/blob/master/basic/main.go
@@ -31,25 +38,73 @@ var fakeDb = make(map[string]string)
 func main() {
 	initDb()
 	r := gin.Default()
-	// db, err := sql.Open("postgres", "user=spotcheck-db-dev dbname=spotcheck_dev sslmode=verify-full")
-	// if err != nil {
-	// 	panic(err)
-	// }
+	db, err := sql.Open("postgres", "user=spotcheck_db_dev dbname=spotcheck_dev sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
 	r.GET("/ping", func(c *gin.Context) {
 		fmt.Println("da ping")
+		// data := userData{}
+
+		userId := 1
+		var uid int
+		var un string
+		var ue string
+		sqlStatement := `SELECT id, username, email FROM users WHERE id=$1`
+		row := db.QueryRow(sqlStatement, userId)
+		err := row.Scan(&uid, &un, &ue)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				fmt.Println("Zero rows found")
+			} else {
+				panic(err)
+			}
+		}
+
+		out, err := json.Marshal(userData{Id: uid, Username: un, Email: ue})
+		fmt.Println(un)
+		if err != nil {
+			c.JSON(500, err)
+			return
+		}
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"message": string(out),
 		})
 	})
 	r.GET("/user/:id", func(c *gin.Context) {
-		fmt.Println("tried to print")
-		id := c.Param("id")
-		value, ok := fakeDb[id]
-		if ok {
-			c.JSON(http.StatusOK, gin.H{"user": id, "value": value})
-		} else {
-			c.JSON(http.StatusOK, gin.H{"user": id, "status": "no value"})
+		// value, ok := fakeDb[id]
+		// if ok {
+		// 	c.JSON(http.StatusOK, gin.H{"user": id, "value": value})
+		// } else {
+		// 	c.JSON(http.StatusOK, gin.H{"user": id, "status": "no value"})
+		// }
+
+		userId := c.Param("id")
+		var uid int
+		var un string
+		var ue string
+		sqlStatement := `SELECT id, username, email FROM users WHERE id=$1`
+		row := db.QueryRow(sqlStatement, userId)
+		err := row.Scan(&uid, &un, &ue)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				fmt.Println("Zero rows found")
+				c.JSON(http.StatusOK, gin.H{"user": userId, "status": "no value"})
+				return
+			} else {
+				panic(err)
+			}
 		}
+
+		out, err := json.Marshal(userData{Id: uid, Username: un, Email: ue})
+		if err != nil {
+			c.JSON(500, err)
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"message": string(out),
+		})
 	})
 
 	r.POST("/user/:id", func(c *gin.Context) {
