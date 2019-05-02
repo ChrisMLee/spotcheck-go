@@ -32,8 +32,8 @@ CREATE TABLE spots(
   image_url text,
   description text,
   address text,
-  lat float,
-  lng float,
+  lat DECIMAL,
+  lng DECIMAL,
   user_id INTEGER REFERENCES users(id)
 );
 
@@ -67,7 +67,15 @@ INSERT INTO spots (name, image_url, description, address, lat, lng, user_id) VAL
   -73.991448,
   1
 );
+
 ```
+
+### GoogleMaps API
+- LatLng type
+https://godoc.org/google.golang.org/genproto/googleapis/type/latlng
+
+- Postgres geographic data points
+https://tapoueh.org/blog/2018/05/postgresql-data-types-point/
 
 ### Docker
 > Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration. 
@@ -86,11 +94,19 @@ https://gist.github.com/josephspurrier/7686b139f29601c3b370
 ### Resources
 #### Go
 * https://medium.com/@rrgarciach/bootstrapping-a-go-application-with-docker-47f1d9071a2a
+* [interfaces](https://stackoverflow.com/questions/23148812/whats-the-meaning-of-interface)
 
 #### Go + Postgres
 * https://medium.com/@vptech/complexity-is-the-bane-of-every-software-engineer-e2878d0ad45a
 * https://flaviocopes.com/golang-sql-database/
 * https://medium.com/@beld_pro/postgres-with-golang-3b788d86f2ef
+* [Why does Go treat a Postgresql numeric & decimal columns as []uint8?
+](https://stackoverflow.com/questions/31946344/why-does-go-treat-a-postgresql-numeric-decimal-columns-as-uint8)
+* https://medium.com/aubergine-solutions/how-i-handled-null-possible-values-from-database-rows-in-golang-521fb0ee267
+> sql.NullString
+> https://golang.org/src/database/sql/sql.go?s=4941:5029#L177
+* [Nullable Json types](https://gist.github.com/rsudip90/022c4ef5d98130a224c9239e0a1ab397)
+
 
 #### Go + GraphQL
 * https://medium.com/@bradford_hamilton/building-an-api-with-graphql-and-go-9350df5c9356
@@ -100,6 +116,7 @@ https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elastics
 
 * [Go tutorial: REST API backed by PostgreSQL](https://flaviocopes.com/golang-tutorial-rest-api/)
 
+
 #### DB
 * https://medium.com/@kimtnguyen/relational-database-schema-design-overview-70e447ff66f9
 
@@ -108,6 +125,7 @@ https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elastics
 > 1. Open connections as late as possible
 > 2. Close connections as soon as possible
 > The connection itself is returned to the connection pool. Connections are a limited and relatively expensive resource. Any new connection you establish that has exactly the same connection string will be able to reuse the connection from the pool.
+* https://dba.stackexchange.com/questions/5222/why-shouldnt-we-allow-nulls
 
 #### Docker
 * [How do I pass environment variables to Docker containers?](https://stackoverflow.com/questions/30494050/how-do-i-pass-environment-variables-to-docker-containers)

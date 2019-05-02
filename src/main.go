@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
+	"log"
 	"net/http"
 	"os"
 )
@@ -22,6 +23,33 @@ type userData struct {
 	Id       int    `json:"id"`
 	Email    string `json:"email"`
 	Username string `json:"username"`
+}
+
+type spot struct {
+	Name        NullString `json:"name"`
+	ImageUrl    NullString `json:"image_url"`
+	Description NullString `json:"description"`
+	Address     NullString `json:"address"`
+	Lat         string     `json:"lat"`
+	Lng         string     `json:"lng"`
+}
+
+type spotResponse struct {
+	Spots []spot `json:"spots"`
+}
+
+// NullString is an alias for sql.NullString data type
+// via https://gist.github.com/rsudip90/022c4ef5d98130a224c9239e0a1ab397
+type NullString struct {
+	sql.NullString
+}
+
+// MarshalJSON for NullString
+func (ns *NullString) MarshalJSON() ([]byte, error) {
+	if !ns.Valid {
+		return []byte("null"), nil
+	}
+	return json.Marshal(ns.String)
 }
 
 var db *sql.DB
@@ -96,15 +124,41 @@ func main() {
 			}
 		}
 
-		out, err := json.Marshal(userData{Id: uid, Username: un, Email: ue})
+		c.JSON(200, userData{Id: uid, Username: un, Email: ue})
+	})
+
+	r.GET("/user/:id/spots", func(c *gin.Context) {
+		userId := c.Param("id")
+		spots := make([]spot, 0)
+		sqlStatement := `SELECT name, image_url, description, address, lat, lng FROM spots WHERE user_id=$1`
+		rows, err := db.Query(sqlStatement, userId)
+		defer rows.Close()
+		for rows.Next() {
+			spot := spot{}
+			if err := rows.Scan(
+				&spot.Name,
+				&spot.ImageUrl,
+				&spot.Description,
+				&spot.Address,
+				&spot.Lat,
+				&spot.Lng); err != nil {
+				log.Println(err)
+			}
+			log.Println(spot)
+			spots = append(spots, spot)
+		}
+		err = rows.Err()
 		if err != nil {
 			c.JSON(500, err)
 			return
 		}
+		// out, err := json.Marshal(spotResponse{Spots: spots})
+		// if err != nil {
+		// 	c.JSON(500, err)
+		// 	return
+		// }
 
-		c.JSON(200, gin.H{
-			"message": string(out),
-		})
+		c.JSON(200, spotResponse{Spots: spots})
 	})
 
 	r.POST("/user/:id", func(c *gin.Context) {
