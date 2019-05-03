@@ -14,7 +14,7 @@ var User = graphql.NewObject(
 				Type: graphql.String,
 			},
 			"username": &graphql.Field{
-				Type: graphql.Int,
+				Type: graphql.String,
 			},
 		},
 	},

@@ -214,8 +214,7 @@ func main() {
 					if err != nil {
 						if err == sql.ErrNoRows {
 							fmt.Println("Zero rows found")
-							c.JSON(http.StatusOK, gin.H{"user": userId, "status": "no value"})
-							return
+							return nil, err
 						} else {
 							panic(err)
 						}
@@ -224,6 +223,7 @@ func main() {
 					user := userData{Id: uid, Username: un, Email: ue}
 					return user, nil
 				}
+				return nil, nil
 			},
 		},
 	}
