@@ -4,7 +4,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/chrismlee/spotcheck-go/gql"
 	"github.com/gin-gonic/gin"
+	"github.com/graphql-go/graphql"
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
@@ -36,6 +38,10 @@ type spot struct {
 
 type spotResponse struct {
 	Spots []spot `json:"spots"`
+}
+
+type reqBody struct {
+	Query string `json:"query"`
 }
 
 // NullString is an alias for sql.NullString data type
@@ -171,6 +177,80 @@ func main() {
 			fakeDb[id] = json.Value
 			c.JSON(http.StatusOK, gin.H{"status": "ok"})
 		}
+	})
+
+	// Schema
+	fields := graphql.Fields{
+		"hello": &graphql.Field{
+			Type: graphql.String,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return "world", nil
+			},
+		},
+		"ron": &graphql.Field{
+			Type: graphql.String,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return "artest", nil
+			},
+		},
+		"user": &graphql.Field{
+			// Slice of User type which can be found in types.go
+			Type: graphql.NewList(User),
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Type: graphql.Int,
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				// Strip the name from arguments and assert that it's a string
+				userId, ok := p.Args["id"].(int)
+				if ok {
+					var uid int
+					var un string
+					var ue string
+					sqlStatement := `SELECT id, username, email FROM users WHERE id=$1`
+					row := db.QueryRow(sqlStatement, userId)
+					err := row.Scan(&uid, &un, &ue)
+					if err != nil {
+						if err == sql.ErrNoRows {
+							fmt.Println("Zero rows found")
+							c.JSON(http.StatusOK, gin.H{"user": userId, "status": "no value"})
+							return
+						} else {
+							panic(err)
+						}
+					}
+
+					user := userData{Id: uid, Username: un, Email: ue}
+					return user, nil
+				}
+			},
+		},
+	}
+	rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: fields}
+	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
+	schema, err := graphql.NewSchema(schemaConfig)
+	if err != nil {
+		log.Fatalf("failed to create new schema, error: %v", err)
+	}
+
+	r.POST("/graphql", func(c *gin.Context) {
+		// x, _ := ioutil.ReadAll(c.Request.Body)
+		// fmt.Printf("%s", string(x))
+		var rBody reqBody
+
+		// if c.BindJSON(&rBody) == nil {
+		// 	log.Println("====== Bind By JSON ======")
+		// 	log.Println(rBody.Query)
+		// }
+		c.BindJSON(&rBody)
+		params := graphql.Params{Schema: schema, RequestString: rBody.Query}
+		r := graphql.Do(params)
+		if len(r.Errors) > 0 {
+			log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
+		}
+
+		c.JSON(200, r)
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080

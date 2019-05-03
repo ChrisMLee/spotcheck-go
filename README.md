@@ -1,6 +1,13 @@
 # Spotcheck Go
 
-docker run -p 8080:8080 -it --rm --name spotcheck-go-run spotcheck-go-image
+### To run:  
+`go run ./src/main.go`
+
+~docker run -p 8080:8080 -it --rm --name spotcheck-go-run spotcheck-go-image~
+
+### Running with Realize
+
+
 
 ### DB
 Entities:
@@ -95,6 +102,8 @@ https://gist.github.com/josephspurrier/7686b139f29601c3b370
 #### Go
 * https://medium.com/@rrgarciach/bootstrapping-a-go-application-with-docker-47f1d9071a2a
 * [interfaces](https://stackoverflow.com/questions/23148812/whats-the-meaning-of-interface)
+* [packages](https://medium.com/rungo/everything-you-need-to-know-about-packages-in-go-b8bac62b74cc)
+* [go packages on SO](https://stackoverflow.com/a/44016468)
 
 #### Go + Postgres
 * https://medium.com/@vptech/complexity-is-the-bane-of-every-software-engineer-e2878d0ad45a
@@ -110,6 +119,7 @@ https://gist.github.com/josephspurrier/7686b139f29601c3b370
 
 #### Go + GraphQL
 * https://medium.com/@bradford_hamilton/building-an-api-with-graphql-and-go-9350df5c9356
+* [Why we moved our graphQL server from Node.js to Golang](https://medium.com/safetycultureengineering/why-we-moved-our-graphql-server-from-node-js-to-golang-645b00571535)
 
 #### Go + docker + postgres + elastic
 https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elasticsearch-in-docker-61bc8a0d5e66
