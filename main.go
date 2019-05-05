@@ -158,11 +158,6 @@ func main() {
 			c.JSON(500, err)
 			return
 		}
-		// out, err := json.Marshal(spotResponse{Spots: spots})
-		// if err != nil {
-		// 	c.JSON(500, err)
-		// 	return
-		// }
 
 		c.JSON(200, spotResponse{Spots: spots})
 	})
@@ -229,8 +224,9 @@ func main() {
 	// 	},
 	// }
 	rootQuery := gql.NewRoot(db)
-	schemaConfig := graphql.SchemaConfig{rootQuery}
-	schema, err := graphql.NewSchema(schemaConfig)
+	schema, err := graphql.NewSchema(
+		graphql.SchemaConfig{Query: rootQuery.Query},
+	)
 	if err != nil {
 		log.Fatalf("failed to create new schema, error: %v", err)
 	}

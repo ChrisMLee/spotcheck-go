@@ -98,6 +98,16 @@ https://tour.golang.org/moretypes/13
 - Golang - Asterisk and Ampersand Cheatsheet
 https://gist.github.com/josephspurrier/7686b139f29601c3b370
 
+### GraphQL: Notes
+#### Fetching data at a field-level
+> child fields are responsible for fetching their own data
+> This code is easy to reason about
+> This code is more testable
+> To some, the getEvent duplication might look like a code smell. But, having code that is simple, easy to reason about, and is more testable is worth a little bit of duplication.
+via [GraphQL Resolvers: Best Practices
+](https://medium.com/paypal-engineering/graphql-resolvers-best-practices-cd36fdbcef55)
+
+
 ### Resources
 #### Go
 * https://medium.com/@rrgarciach/bootstrapping-a-go-application-with-docker-47f1d9071a2a
@@ -125,12 +135,18 @@ View all installed go packages:
 #### Go + GraphQL
 * https://medium.com/@bradford_hamilton/building-an-api-with-graphql-and-go-9350df5c9356
 * [Why we moved our graphQL server from Node.js to Golang](https://medium.com/safetycultureengineering/why-we-moved-our-graphql-server-from-node-js-to-golang-645b00571535)
+* [Concurrent resolvers](https://github.com/graphql-go/graphql/tree/master/examples/concurrent-resolvers)
+* [Getting Started With GraphQL Using Golang](https://www.thepolyglotdeveloper.com/2018/05/getting-started-graphql-golang/)
+* [Dataloader Go Implementation](https://github.com/graph-gophers/dataloader)
+
 
 #### Go + docker + postgres + elastic
 https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elasticsearch-in-docker-61bc8a0d5e66
 
 * [Go tutorial: REST API backed by PostgreSQL](https://flaviocopes.com/golang-tutorial-rest-api/)
 
+#### GraphQL
+* [GraphQL Resolvers: Best Practices](https://medium.com/paypal-engineering/graphql-resolvers-best-practices-cd36fdbcef55)
 
 #### DB
 * https://medium.com/@kimtnguyen/relational-database-schema-design-overview-70e447ff66f9

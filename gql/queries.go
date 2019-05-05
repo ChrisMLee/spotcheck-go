@@ -18,10 +18,15 @@ type userData struct {
 	Username string `json:"username"`
 }
 
-// graphql.ObjectConfig{Name: "RootQuery", Fields: fields}
+// type Hero struct {
+// 	Id      string `graphql:"id"`
+// 	Name    string
+// 	Friends []Hero `graphql:"friends"`
+// }
 
 // NewRoot returns base query type. This is where we add all the base queries
 func NewRoot(db *sql.DB) *Root {
+	resolver := Resolver{db: db}
 	root := Root{
 		Query: graphql.NewObject(
 			graphql.ObjectConfig{
@@ -41,38 +46,13 @@ func NewRoot(db *sql.DB) *Root {
 					},
 					"user": &graphql.Field{
 						// Slice of User type which can be found in types.go
-						Type: User,
+						Type: UserType,
 						Args: graphql.FieldConfigArgument{
 							"id": &graphql.ArgumentConfig{
 								Type: graphql.Int,
 							},
 						},
-						Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-							// Strip the name from arguments and assert that it's a string
-							userId, ok := p.Args["id"].(int)
-							fmt.Println("trying")
-							if ok {
-								var uid int
-								var un string
-								var ue string
-								sqlStatement := `SELECT id, username, email FROM users WHERE id=$1`
-								row := db.QueryRow(sqlStatement, userId)
-								err := row.Scan(&uid, &un, &ue)
-								if err != nil {
-									if err == sql.ErrNoRows {
-										fmt.Println("Zero rows found")
-										return nil, err
-									} else {
-										panic(err)
-									}
-								}
-
-								user := userData{Id: uid, Username: un, Email: ue}
-								return user, nil
-							}
-							return nil, nil
-						},
-					},
+						Resolve: resolver.UserResolver},
 				},
 			},
 		),
