@@ -1,6 +1,8 @@
 package gql
 
 import (
+	"database/sql"
+	"fmt"
 	"github.com/graphql-go/graphql"
 	_ "github.com/lib/pq"
 )
@@ -8,6 +10,12 @@ import (
 // Root holds a pointer to a graphql object
 type Root struct {
 	Query *graphql.Object
+}
+
+type userData struct {
+	Id       int    `json:"id"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
 }
 
 // graphql.ObjectConfig{Name: "RootQuery", Fields: fields}
@@ -33,7 +41,7 @@ func NewRoot(db *sql.DB) *Root {
 					},
 					"user": &graphql.Field{
 						// Slice of User type which can be found in types.go
-						Type: gql.User,
+						Type: User,
 						Args: graphql.FieldConfigArgument{
 							"id": &graphql.ArgumentConfig{
 								Type: graphql.Int,
