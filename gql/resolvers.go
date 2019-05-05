@@ -20,7 +20,7 @@ func (r *Resolver) UserResolver(p graphql.ResolveParams) (interface{}, error) {
 		var un string
 		var ue string
 		sqlStatement := `SELECT id, username, email FROM users WHERE id=$1`
-		row := db.QueryRow(sqlStatement, userId)
+		row := r.db.QueryRow(sqlStatement, userId)
 		err := row.Scan(&uid, &un, &ue)
 		if err != nil {
 			if err == sql.ErrNoRows {
