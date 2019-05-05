@@ -5,6 +5,11 @@
 
 ~docker run -p 8080:8080 -it --rm --name spotcheck-go-run spotcheck-go-image~
 
+
+### Golang tutorial thoughts
+- importing modules
+- attaching a DB instance to context
+
 ### Running with Realize
 
 
@@ -118,7 +123,13 @@ via [GraphQL Resolvers: Best Practices
 
 
 View all installed go packages:  
-`godoc --http :6060`
+`godoc --http :6060`  
+
+You have to develop under ``GOPATH/src/github.com/username/project-name` if you want to develop locally and have your imports work.
+
+View your gopath:
+`go env GOPATH`
+
 
 #### Go + Postgres
 * https://medium.com/@vptech/complexity-is-the-bane-of-every-software-engineer-e2878d0ad45a
@@ -138,7 +149,36 @@ View all installed go packages:
 * [Concurrent resolvers](https://github.com/graphql-go/graphql/tree/master/examples/concurrent-resolvers)
 * [Getting Started With GraphQL Using Golang](https://www.thepolyglotdeveloper.com/2018/05/getting-started-graphql-golang/)
 * [Dataloader Go Implementation](https://github.com/graph-gophers/dataloader)
+* [GraphQL with Golang: A Deep Dive From Basics To Advanced](https://medium.freecodecamp.org/deep-dive-into-graphql-with-golang-d3e02a429ac3)
 
+```
+// Trivial resolver example
+https://github.com/graphql-go/graphql/blob/796d22335788bc53c1921db39d262f5eccf5a1e2/examples/modify-context/main.go
+
+
+// Instead of trying to modify context within a resolve function, use:
+// `graphql.Params.RootObject` is a mutable optional variable and available on
+// each resolve function via: `graphql.ResolveParams.Info.RootValue`.
+
+
+// https://github.com/graphql-go/graphql/blob/199d20bbfed70dae8c7d4619d4e0d339ce738b43/definition.go
+// ResolveParams Params for FieldResolveFn()
+type ResolveParams struct {
+	// Source is the source value
+	Source interface{}
+
+	// Args is a map of arguments for current GraphQL request
+	Args map[string]interface{}
+
+	// Info is a collection of information about the current execution state.
+	Info ResolveInfo
+
+	// Context argument is a context value that is provided to every resolve function within an execution.
+	// It is commonly
+	// used to represent an authenticated user, or request-specific caches.
+	Context context.Context
+}
+```
 
 #### Go + docker + postgres + elastic
 https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elasticsearch-in-docker-61bc8a0d5e66
@@ -147,6 +187,14 @@ https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elastics
 
 #### GraphQL
 * [GraphQL Resolvers: Best Practices](https://medium.com/paypal-engineering/graphql-resolvers-best-practices-cd36fdbcef55)
+> Fetching data at a field-level 
+* [Apollo: Fetching data with resolvers](https://www.apollographql.com/docs/apollo-server/essentials/data)
+
+> The context is how you access your shared connections and fetchers in resolvers to get data.
+
+> The context is the third argument passed to every resolver. It is useful for passing things that any resolver may need, like authentication scope, database connections, and custom fetch functions. Additionally, if you're using dataloaders to batch requests across resolvers, you can attach them to the context as well.
+
+> As a best practice, context should be the same for all resolvers, no matter the particular query or mutation, and resolvers should never modify it. This ensures consistency across resolvers, and helps increase development velocity.
 
 #### DB
 * https://medium.com/@kimtnguyen/relational-database-schema-design-overview-70e447ff66f9

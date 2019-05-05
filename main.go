@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -174,55 +175,6 @@ func main() {
 		}
 	})
 
-	// // Schema
-	// fields := graphql.Fields{
-	// 	"hello": &graphql.Field{
-	// 		Type: graphql.String,
-	// 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-	// 			return "world", nil
-	// 		},
-	// 	},
-	// 	"ron": &graphql.Field{
-	// 		Type: graphql.String,
-	// 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-	// 			return "artest", nil
-	// 		},
-	// 	},
-	// 	"user": &graphql.Field{
-	// 		// Slice of User type which can be found in types.go
-	// 		Type: gql.User,
-	// 		Args: graphql.FieldConfigArgument{
-	// 			"id": &graphql.ArgumentConfig{
-	// 				Type: graphql.Int,
-	// 			},
-	// 		},
-	// 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-	// 			// Strip the name from arguments and assert that it's a string
-	// 			userId, ok := p.Args["id"].(int)
-	// 			fmt.Println("trying")
-	// 			if ok {
-	// 				var uid int
-	// 				var un string
-	// 				var ue string
-	// 				sqlStatement := `SELECT id, username, email FROM users WHERE id=$1`
-	// 				row := db.QueryRow(sqlStatement, userId)
-	// 				err := row.Scan(&uid, &un, &ue)
-	// 				if err != nil {
-	// 					if err == sql.ErrNoRows {
-	// 						fmt.Println("Zero rows found")
-	// 						return nil, err
-	// 					} else {
-	// 						panic(err)
-	// 					}
-	// 				}
-
-	// 				user := userData{Id: uid, Username: un, Email: ue}
-	// 				return user, nil
-	// 			}
-	// 			return nil, nil
-	// 		},
-	// 	},
-	// }
 	rootQuery := gql.NewRoot(db)
 	schema, err := graphql.NewSchema(
 		graphql.SchemaConfig{Query: rootQuery.Query},
@@ -236,12 +188,10 @@ func main() {
 		// fmt.Printf("%s", string(x))
 		var rBody reqBody
 
-		// if c.BindJSON(&rBody) == nil {
-		// 	log.Println("====== Bind By JSON ======")
-		// 	log.Println(rBody.Query)
-		// }
 		c.BindJSON(&rBody)
-		params := graphql.Params{Schema: schema, RequestString: rBody.Query}
+
+		ctx := context.WithValue(context.Background(), "db", db)
+		params := graphql.Params{Schema: schema, RequestString: rBody.Query, Context: ctx}
 		r := graphql.Do(params)
 		if len(r.Errors) > 0 {
 			log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)

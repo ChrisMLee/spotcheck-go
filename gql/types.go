@@ -1,6 +1,11 @@
 package gql
 
-import "github.com/graphql-go/graphql"
+import (
+	"database/sql"
+	"fmt"
+	"github.com/graphql-go/graphql"
+	"log"
+)
 
 // type spot struct {
 // 	Name        NullString `json:"name"`
@@ -11,55 +16,73 @@ import "github.com/graphql-go/graphql"
 // 	Lng         string     `json:"lng"`
 // }
 
-var UserType = graphql.NewObject(
-	graphql.ObjectConfig{
-		Name: "User",
-		Fields: graphql.Fields{
-			"id": &graphql.Field{
-				Type: graphql.Int,
+var UserType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "User",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{
+			Type: graphql.Int,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				user := p.Source.(userData)
+				return user.Id, nil
 			},
-			"email": &graphql.Field{
-				Type: graphql.String,
+		},
+		"email": &graphql.Field{
+			Type: graphql.String,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				user := p.Source.(userData)
+				fmt.Println("damn son where'd you find this?")
+				fmt.Println("email")
+				fmt.Println(user)
+				return user.Email, nil
 			},
-			"username": &graphql.Field{
-				Type: graphql.String,
+		},
+		"username": &graphql.Field{
+			Type: graphql.String,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				user := p.Source.(userData)
+				fmt.Println("username")
+				fmt.Println(user)
+				return user.Username, nil
 			},
-			// "spots": &graphql.Field{
-			// 	Type:        graphql.NewList(SpotType),
-			// 	Description: "A list of spots created by a given user",
-			// 	Resolver: func(p graphql.ResolveParams) (interface{}, error) {
-			// 		userId, ok := p.Args["id"].(int)
-			// 		spots := make([]spot, 0)
-			// 		sqlStatement := `SELECT name, image_url, description, address, lat, lng FROM spots WHERE user_id=$1`
-			// 		rows, err := db.Query(sqlStatement, userId)
-			// 		defer rows.Close()
-			// 		for rows.Next() {
-			// 			spot := spot{}
-			// 			if err := rows.Scan(
-			// 				&spot.Name,
-			// 				&spot.ImageUrl,
-			// 				&spot.Description,
-			// 				&spot.Address,
-			// 				&spot.Lat,
-			// 				&spot.Lng); err != nil {
-			// 					log.Println(err)
-			// 				}
-			// 			log.Println(spot)
-			// 			spots = append(spots, spot)
-			// 		}
-			// 		err = rows.Err()
-			// 		if err != nil {
-			// 			c.JSON(500, err)
-			// 			return
-			// 		}
+		},
+		"spots": &graphql.Field{
+			Type: graphql.NewList(SpotType),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				user := p.Source.(userData)
 
-			// 		c.JSON(200, spotResponse{Spots: spots})
-
-			//         },
-			// },
+				spots := make([]spot, 0)
+				sqlStatement := `SELECT name, image_url, description, address, lat, lng FROM spots WHERE user_id=$1`
+				db, _ := p.Context.Value("db").(*sql.DB)
+				rows, err := db.Query(sqlStatement, user.Id)
+				defer rows.Close()
+				for rows.Next() {
+					spot := spot{}
+					if err := rows.Scan(
+						&spot.Name,
+						&spot.ImageUrl,
+						&spot.Description,
+						&spot.Address,
+						&spot.Lat,
+						&spot.Lng); err != nil {
+						log.Println(err)
+					}
+					log.Println(spot)
+					spots = append(spots, spot)
+				}
+				err = rows.Err()
+				if err != nil {
+					if err == sql.ErrNoRows {
+						fmt.Println("Zero rows found")
+						return nil, err
+					} else {
+						panic(err)
+					}
+				}
+				return spots, nil
+			},
 		},
 	},
-)
+})
 
 var SpotType = graphql.NewObject(
 	graphql.ObjectConfig{
@@ -67,15 +90,47 @@ var SpotType = graphql.NewObject(
 		Fields: graphql.Fields{
 			"name": &graphql.Field{
 				Type: graphql.String,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					spot := p.Source.(spot)
+					if spot.Name.Valid == true {
+						return spot.Name.String, nil
+					} else {
+						return nil, nil
+					}
+				},
 			},
 			"image_url": &graphql.Field{
 				Type: graphql.String,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					spot := p.Source.(spot)
+					if spot.ImageUrl.Valid == true {
+						return spot.ImageUrl.String, nil
+					} else {
+						return nil, nil
+					}
+				},
 			},
 			"description": &graphql.Field{
 				Type: graphql.String,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					spot := p.Source.(spot)
+					if spot.Description.Valid == true {
+						return spot.Description.String, nil
+					} else {
+						return nil, nil
+					}
+				},
 			},
 			"address": &graphql.Field{
 				Type: graphql.String,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					spot := p.Source.(spot)
+					if spot.Address.Valid == true {
+						return spot.Address.String, nil
+					} else {
+						return nil, nil
+					}
+				},
 			},
 			"lat": &graphql.Field{
 				Type: graphql.String,
