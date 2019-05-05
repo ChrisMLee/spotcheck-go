@@ -104,6 +104,11 @@ https://gist.github.com/josephspurrier/7686b139f29601c3b370
 * [interfaces](https://stackoverflow.com/questions/23148812/whats-the-meaning-of-interface)
 * [packages](https://medium.com/rungo/everything-you-need-to-know-about-packages-in-go-b8bac62b74cc)
 * [go packages on SO](https://stackoverflow.com/a/44016468)
+* [Golang how to import local packages without gopath?](https://stackoverflow.com/questions/17539407/golang-how-to-import-local-packages-without-gopath)
+
+
+View all installed go packages:  
+`godoc --http :6060`
 
 #### Go + Postgres
 * https://medium.com/@vptech/complexity-is-the-bane-of-every-software-engineer-e2878d0ad45a
@@ -111,7 +116,7 @@ https://gist.github.com/josephspurrier/7686b139f29601c3b370
 * https://medium.com/@beld_pro/postgres-with-golang-3b788d86f2ef
 * [Why does Go treat a Postgresql numeric & decimal columns as []uint8?
 ](https://stackoverflow.com/questions/31946344/why-does-go-treat-a-postgresql-numeric-decimal-columns-as-uint8)
-* https://medium.com/aubergine-solutions/how-i-handled-null-possible-values-from-database-rows-in-golang-521fb0ee267
+* [How I handled possible null values from database rows in Golang?](https://medium.com/aubergine-solutions/how-i-handled-null-possible-values-from-database-rows-in-golang-521fb0ee267)
 > sql.NullString
 > https://golang.org/src/database/sql/sql.go?s=4941:5029#L177
 * [Nullable Json types](https://gist.github.com/rsudip90/022c4ef5d98130a224c9239e0a1ab397)
