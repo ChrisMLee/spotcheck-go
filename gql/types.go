@@ -2,14 +2,14 @@ package gql
 
 import "github.com/graphql-go/graphql"
 
-type spot struct {
-	Name        NullString `json:"name"`
-	ImageUrl    NullString `json:"image_url"`
-	Description NullString `json:"description"`
-	Address     NullString `json:"address"`
-	Lat         string     `json:"lat"`
-	Lng         string     `json:"lng"`
-}
+// type spot struct {
+// 	Name        NullString `json:"name"`
+// 	ImageUrl    NullString `json:"image_url"`
+// 	Description NullString `json:"description"`
+// 	Address     NullString `json:"address"`
+// 	Lat         string     `json:"lat"`
+// 	Lng         string     `json:"lng"`
+// }
 
 var UserType = graphql.NewObject(
 	graphql.ObjectConfig{

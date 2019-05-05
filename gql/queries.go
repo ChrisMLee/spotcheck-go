@@ -2,7 +2,6 @@ package gql
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/graphql-go/graphql"
 	_ "github.com/lib/pq"
 )
