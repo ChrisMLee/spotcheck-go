@@ -150,6 +150,7 @@ View your gopath:
 * [Getting Started With GraphQL Using Golang](https://www.thepolyglotdeveloper.com/2018/05/getting-started-graphql-golang/)
 * [Dataloader Go Implementation](https://github.com/graph-gophers/dataloader)
 * [GraphQL with Golang: A Deep Dive From Basics To Advanced](https://medium.freecodecamp.org/deep-dive-into-graphql-with-golang-d3e02a429ac3)
+* [My first GraphQL server in Go responding to Apollo](https://medium.com/@maumribeiro/my-first-graphql-server-in-go-responding-to-apollo-bd1c11426572)
 
 ```
 // Trivial resolver example
@@ -177,6 +178,19 @@ type ResolveParams struct {
 	// It is commonly
 	// used to represent an authenticated user, or request-specific caches.
 	Context context.Context
+}
+
+type ResolveInfo struct {
+	FieldName      string
+	FieldASTs      []*ast.Field
+	Path           *ResponsePath
+	ReturnType     Output
+	ParentType     Composite
+	Schema         Schema
+	Fragments      map[string]ast.Definition
+	RootValue      interface{}
+	Operation      ast.Definition
+	VariableValues map[string]interface{}
 }
 ```
 

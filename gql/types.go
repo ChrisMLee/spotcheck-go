@@ -20,7 +20,7 @@ var UserType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "User",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
-			Type: graphql.Int,
+			Type: graphql.ID,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				user := p.Source.(userData)
 				return user.Id, nil
@@ -51,13 +51,14 @@ var UserType = graphql.NewObject(graphql.ObjectConfig{
 				user := p.Source.(userData)
 
 				spots := make([]spot, 0)
-				sqlStatement := `SELECT name, image_url, description, address, lat, lng FROM spots WHERE user_id=$1`
+				sqlStatement := `SELECT id, name, image_url, description, address, lat, lng FROM spots WHERE user_id=$1`
 				db, _ := p.Context.Value("db").(*sql.DB)
 				rows, err := db.Query(sqlStatement, user.Id)
 				defer rows.Close()
 				for rows.Next() {
 					spot := spot{}
 					if err := rows.Scan(
+						&spot.Id,
 						&spot.Name,
 						&spot.ImageUrl,
 						&spot.Description,
@@ -88,6 +89,13 @@ var SpotType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Spot",
 		Fields: graphql.Fields{
+			"id": &graphql.Field{
+				Type: graphql.ID,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					spot := p.Source.(spot)
+					return spot.Id, nil
+				},
+			},
 			"name": &graphql.Field{
 				Type: graphql.String,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {

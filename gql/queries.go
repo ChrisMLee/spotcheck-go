@@ -23,6 +23,7 @@ type userData struct {
 }
 
 type spot struct {
+	Id          int        `json:"id"`
 	Name        NullString `json:"name"`
 	ImageUrl    NullString `json:"image_url"`
 	Description NullString `json:"description"`
