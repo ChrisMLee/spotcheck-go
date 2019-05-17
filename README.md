@@ -142,6 +142,8 @@ View your gopath:
 > https://golang.org/src/database/sql/sql.go?s=4941:5029#L177
 * [Nullable Json types](https://gist.github.com/rsudip90/022c4ef5d98130a224c9239e0a1ab397)
 * [Go database/sql tutorial](http://go-database-sql.org/index.html)
+* [Inserting records into a PostgreSQL database with Go's database/sql package](https://www.calhoun.io/inserting-records-into-a-postgresql-database-with-gos-database-sql-package/)
+* [Golang Insert NULL into sql instead of empty string](https://stackoverflow.com/questions/40266633/golang-insert-null-into-sql-instead-of-empty-string)
 
 #### Go + GraphQL
 * https://medium.com/@bradford_hamilton/building-an-api-with-graphql-and-go-9350df5c9356

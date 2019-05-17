@@ -117,7 +117,6 @@ var Mutations = graphql.NewObject(graphql.ObjectConfig{
 						&dbSpotUserId,
 					)
 					if err != nil {
-						fmt.Println("YO DWEDE ERRRROR")
 						fmt.Println(err)
 						if err == sql.ErrNoRows {
 							fmt.Println("Zero rows found")
