@@ -141,7 +141,7 @@ View your gopath:
 > sql.NullString
 > https://golang.org/src/database/sql/sql.go?s=4941:5029#L177
 * [Nullable Json types](https://gist.github.com/rsudip90/022c4ef5d98130a224c9239e0a1ab397)
-
+* [Go database/sql tutorial](http://go-database-sql.org/index.html)
 
 #### Go + GraphQL
 * https://medium.com/@bradford_hamilton/building-an-api-with-graphql-and-go-9350df5c9356
@@ -210,6 +210,10 @@ https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elastics
 
 > As a best practice, context should be the same for all resolvers, no matter the particular query or mutation, and resolvers should never modify it. This ensures consistency across resolvers, and helps increase development velocity.
 
+* [Apollo: Designing GraphQL Mutations](https://blog.apollographql.com/designing-graphql-mutations-e09de826ed97)
+> Specific mutations that correspond to semantic user actions are more powerful than general mutations. This is because specific mutations are easier for a UI developer to write, they can be optimized by a backend developer, and only providing a specific subset of mutations makes it much harder for an attacker to exploit your API.
+> Mutations should only ever have one input argument. That argument should be named input and should have a non-null unique input object type.
+
 #### DB
 * https://medium.com/@kimtnguyen/relational-database-schema-design-overview-70e447ff66f9
 
@@ -219,6 +223,13 @@ https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elastics
 > 2. Close connections as soon as possible
 > The connection itself is returned to the connection pool. Connections are a limited and relatively expensive resource. Any new connection you establish that has exactly the same connection string will be able to reuse the connection from the pool.
 * https://dba.stackexchange.com/questions/5222/why-shouldnt-we-allow-nulls
+
+
+* [Permission denied for relation <table>](https://dba.stackexchange.com/questions/53914/permission-denied-for-relation-table)
+```
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO spotcheck_db_dev;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO spotcheck_db_dev;
+```
 
 #### Docker
 * [How do I pass environment variables to Docker containers?](https://stackoverflow.com/questions/30494050/how-do-i-pass-environment-variables-to-docker-containers)

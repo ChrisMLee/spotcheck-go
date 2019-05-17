@@ -30,17 +30,12 @@ type spot struct {
 	Address     NullString `json:"address"`
 	Lat         string     `json:"lat"`
 	Lng         string     `json:"lng"`
+	UserId      int        `json:"user_id`
 }
 
 type spotResponse struct {
 	Spots []spot `json:"spots"`
 }
-
-// type Hero struct {
-// 	Id      string `graphql:"id"`
-// 	Name    string
-// 	Friends []Hero `graphql:"friends"`
-// }
 
 // NewRoot returns base query type. This is where we add all the base queries
 func NewRoot(db *sql.DB) *Root {
@@ -73,7 +68,7 @@ func NewRoot(db *sql.DB) *Root {
 						Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 							// Strip the name from arguments and assert that it's a string
 							userId, ok := p.Args["id"].(int)
-							fmt.Println("trying")
+
 							if ok {
 								var uid int
 								var un string

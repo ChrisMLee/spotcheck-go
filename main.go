@@ -197,7 +197,7 @@ func main() {
 
 	rootQuery := gql.NewRoot(db)
 	schema, err := graphql.NewSchema(
-		graphql.SchemaConfig{Query: rootQuery.Query},
+		graphql.SchemaConfig{Query: rootQuery.Query, Mutation: gql.Mutations},
 	)
 	if err != nil {
 		log.Fatalf("failed to create new schema, error: %v", err)
