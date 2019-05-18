@@ -221,7 +221,6 @@ func main() {
 			x, _ := ioutil.ReadAll(c.Request.Body)
 			fmt.Printf("%s", string(x))
 
-			log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
 		}
 
 		c.JSON(200, r)

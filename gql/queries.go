@@ -33,6 +33,10 @@ type spot struct {
 	UserId      int        `json:"user_id`
 }
 
+type node struct {
+	Id int `json:"id"`
+}
+
 type spotResponse struct {
 	Spots []spot `json:"spots"`
 }

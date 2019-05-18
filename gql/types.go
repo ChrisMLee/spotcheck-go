@@ -152,3 +152,14 @@ var SpotType = graphql.NewObject(
 		},
 	},
 )
+
+var NodeType = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "Node",
+		Fields: graphql.Fields{
+			"id": &graphql.Field{
+				Type: graphql.ID,
+			},
+		},
+	},
+)

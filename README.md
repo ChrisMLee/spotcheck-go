@@ -216,6 +216,15 @@ https://medium.com/@leo_hetsch/local-development-with-go-postgresql-and-elastics
 > Specific mutations that correspond to semantic user actions are more powerful than general mutations. This is because specific mutations are easier for a UI developer to write, they can be optimized by a backend developer, and only providing a specific subset of mutations makes it much harder for an attacker to exploit your API.
 > Mutations should only ever have one input argument. That argument should be named input and should have a non-null unique input object type.
 
+
+* [Best practice when a mutation deletes an object ](https://github.com/apollographql/apollo-feature-requests/issues/5)
+> By far the easiest approach for us has been to have a field on the object called "deleted" then when you delete an object just send it through as deleted : true and everything will update. You need to write your client side container components with this in mind though, so it's definitely no silver bullet. 
+> https://github.com/apollographql/apollo-client/issues/899#issuecomment-406439825
+
+* [Result of a delete mutation?](https://stackoverflow.com/questions/44120314/result-of-a-delete-mutation)
+> I don't think a clear de facto standard exists as of July, 2017, and I see a lot of differences between implementations (GitHub, Yelp, GraphCool, Shopify).
+
+
 #### DB
 * https://medium.com/@kimtnguyen/relational-database-schema-design-overview-70e447ff66f9
 

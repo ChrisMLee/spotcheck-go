@@ -51,9 +51,50 @@ var CreateSpotType = graphql.NewInputObject(graphql.InputObjectConfig{
 	},
 })
 
+var DeleteSpotType = graphql.NewInputObject(graphql.InputObjectConfig{
+	Name: "DeleteSpot",
+	Fields: graphql.InputObjectConfigFieldMap{
+		"spot_id": &graphql.InputObjectFieldConfig{
+			Type:        graphql.NewNonNull(graphql.Int),
+			Description: "The id of the spot to delete",
+		},
+	},
+})
 var Mutations = graphql.NewObject(graphql.ObjectConfig{
 	Name: "MutationType",
 	Fields: graphql.Fields{
+		"deleteSpot": &graphql.Field{
+			Type: NodeType,
+			Args: graphql.FieldConfigArgument{
+				"input": &graphql.ArgumentConfig{
+					Description: "An input with the spot id to delete",
+					Type:        graphql.NewNonNull(DeleteSpotType),
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				inp, ok := p.Args["input"].(map[string]interface{})
+				fmt.Println("DA IMP", inp)
+				if ok {
+					id := inp["spot_id"].(int)
+					sqlStatement := `DELETE FROM spots WHERE id = $1;`
+					db, _ := p.Context.Value("db").(*sql.DB)
+					res, err := db.Exec(sqlStatement, id)
+					count, err := res.RowsAffected()
+
+					if err != nil {
+						panic(err)
+					}
+					fmt.Println("count", count)
+					if count > 0 && count < 2 {
+						return node{Id: id}, nil
+					} else {
+						return nil, nil
+					}
+				}
+				return nil, nil
+
+			},
+		},
 		"createSpot": &graphql.Field{
 			Type: SpotType,
 			Args: graphql.FieldConfigArgument{
